@@ -1,0 +1,510 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.1.42"
+        }
+      },
+      "CopChatAppStack": {
+        "id": "CopChatAppStack",
+        "path": "CopChatAppStack",
+        "children": {
+          "imported VPC": {
+            "id": "imported VPC",
+            "path": "CopChatAppStack/imported VPC",
+            "children": {
+              "PublicSubnet1": {
+                "id": "PublicSubnet1",
+                "path": "CopChatAppStack/imported VPC/PublicSubnet1",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.28.1"
+                }
+              },
+              "PublicSubnet2": {
+                "id": "PublicSubnet2",
+                "path": "CopChatAppStack/imported VPC/PublicSubnet2",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.28.1"
+                }
+              },
+              "PublicSubnet3": {
+                "id": "PublicSubnet3",
+                "path": "CopChatAppStack/imported VPC/PublicSubnet3",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.28.1"
+                }
+              },
+              "PublicSubnet4": {
+                "id": "PublicSubnet4",
+                "path": "CopChatAppStack/imported VPC/PublicSubnet4",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.28.1"
+                }
+              },
+              "PublicSubnet5": {
+                "id": "PublicSubnet5",
+                "path": "CopChatAppStack/imported VPC/PublicSubnet5",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.28.1"
+                }
+              },
+              "PublicSubnet6": {
+                "id": "PublicSubnet6",
+                "path": "CopChatAppStack/imported VPC/PublicSubnet6",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.28.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.Resource",
+              "version": "2.28.1"
+            }
+          },
+          "SecurityGroupEc2ChatApp": {
+            "id": "SecurityGroupEc2ChatApp",
+            "path": "CopChatAppStack/SecurityGroupEc2ChatApp",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "CopChatAppStack/SecurityGroupEc2ChatApp/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "groupDescription": "security group for chat app ec2 instance",
+                    "groupName": "alms04ue1-sumadi-sg-chat-app-dev",
+                    "securityGroupEgress": [
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "description": "Allow all outbound traffic by default",
+                        "ipProtocol": "-1"
+                      }
+                    ],
+                    "vpcId": "vpc-0124b7c33740834aa"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                  "version": "2.28.1"
+                }
+              },
+              "from CopChatAppStackSecurityGroupALBChatAppACFFB872:5000": {
+                "id": "from CopChatAppStackSecurityGroupALBChatAppACFFB872:5000",
+                "path": "CopChatAppStack/SecurityGroupEc2ChatApp/from CopChatAppStackSecurityGroupALBChatAppACFFB872:5000",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupIngress",
+                  "aws:cdk:cloudformation:props": {
+                    "ipProtocol": "tcp",
+                    "description": "Load balancer to target",
+                    "fromPort": 5000,
+                    "groupId": {
+                      "Fn::GetAtt": [
+                        "SecurityGroupEc2ChatApp0A2C43BE",
+                        "GroupId"
+                      ]
+                    },
+                    "sourceSecurityGroupId": {
+                      "Fn::GetAtt": [
+                        "SecurityGroupALBChatAppF517B462",
+                        "GroupId"
+                      ]
+                    },
+                    "toPort": 5000
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroupIngress",
+                  "version": "2.28.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
+              "version": "2.28.1"
+            }
+          },
+          "LaunchTemplateChatApp": {
+            "id": "LaunchTemplateChatApp",
+            "path": "CopChatAppStack/LaunchTemplateChatApp",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "CopChatAppStack/LaunchTemplateChatApp/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::LaunchTemplate",
+                  "aws:cdk:cloudformation:props": {
+                    "launchTemplateData": {
+                      "imageId": "ami-0d5fd506b85a1c987",
+                      "instanceType": "t3.micro",
+                      "keyName": "cop-chat-app",
+                      "securityGroupIds": [
+                        {
+                          "Fn::GetAtt": [
+                            "SecurityGroupEc2ChatApp0A2C43BE",
+                            "GroupId"
+                          ]
+                        }
+                      ],
+                      "tagSpecifications": [
+                        {
+                          "resourceType": "instance",
+                          "tags": [
+                            {
+                              "key": "Name",
+                              "value": "CopChatAppStack/LaunchTemplateChatApp"
+                            }
+                          ]
+                        },
+                        {
+                          "resourceType": "volume",
+                          "tags": [
+                            {
+                              "key": "Name",
+                              "value": "CopChatAppStack/LaunchTemplateChatApp"
+                            }
+                          ]
+                        }
+                      ],
+                      "userData": {
+                        "Fn::Base64": "#!/bin/bash"
+                      }
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnLaunchTemplate",
+                  "version": "2.28.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ec2.LaunchTemplate",
+              "version": "2.28.1"
+            }
+          },
+          "SecurityGroupALBChatApp": {
+            "id": "SecurityGroupALBChatApp",
+            "path": "CopChatAppStack/SecurityGroupALBChatApp",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "CopChatAppStack/SecurityGroupALBChatApp/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "groupDescription": "security group for chat app elb",
+                    "groupName": "alms04ue1-sumadi-sg-elb-chat-app-dev",
+                    "securityGroupEgress": [
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "description": "Allow all outbound traffic by default",
+                        "ipProtocol": "-1"
+                      }
+                    ],
+                    "securityGroupIngress": [
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "ipProtocol": "tcp",
+                        "fromPort": 5000,
+                        "toPort": 5000,
+                        "description": "connection for application port"
+                      },
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "ipProtocol": "tcp",
+                        "fromPort": 80,
+                        "toPort": 80,
+                        "description": "Allow from anyone on port 80"
+                      }
+                    ],
+                    "vpcId": "vpc-0124b7c33740834aa"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                  "version": "2.28.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
+              "version": "2.28.1"
+            }
+          },
+          "LBChatApp": {
+            "id": "LBChatApp",
+            "path": "CopChatAppStack/LBChatApp",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "CopChatAppStack/LBChatApp/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+                  "aws:cdk:cloudformation:props": {
+                    "loadBalancerAttributes": [
+                      {
+                        "key": "deletion_protection.enabled",
+                        "value": "false"
+                      }
+                    ],
+                    "scheme": "internet-facing",
+                    "securityGroups": [
+                      {
+                        "Fn::GetAtt": [
+                          "SecurityGroupALBChatAppF517B462",
+                          "GroupId"
+                        ]
+                      }
+                    ],
+                    "subnets": [
+                      "subnet-08b0d8212e9cf97db",
+                      "subnet-058b06646465341f3",
+                      "subnet-02cdd36471bae50d3",
+                      "subnet-0ae525f938b91330a",
+                      "subnet-0972fd484f81b30b2",
+                      "subnet-0d91f4b4c24626642"
+                    ],
+                    "type": "application"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnLoadBalancer",
+                  "version": "2.28.1"
+                }
+              },
+              "ListenerChatApp": {
+                "id": "ListenerChatApp",
+                "path": "CopChatAppStack/LBChatApp/ListenerChatApp",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "CopChatAppStack/LBChatApp/ListenerChatApp/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::Listener",
+                      "aws:cdk:cloudformation:props": {
+                        "defaultActions": [
+                          {
+                            "type": "forward",
+                            "targetGroupArn": {
+                              "Ref": "LBChatAppListenerChatAppdefaulttargetGroup45BC7F20"
+                            }
+                          }
+                        ],
+                        "loadBalancerArn": {
+                          "Ref": "LBChatApp4B8A2248"
+                        },
+                        "port": 80,
+                        "protocol": "HTTP"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnListener",
+                      "version": "2.28.1"
+                    }
+                  },
+                  "default-targetGroup": {
+                    "id": "default-targetGroup",
+                    "path": "CopChatAppStack/LBChatApp/ListenerChatApp/default-targetGroup",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "CopChatAppStack/LBChatApp/ListenerChatApp/default-targetGroup/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+                          "aws:cdk:cloudformation:props": {
+                            "healthCheckIntervalSeconds": 30,
+                            "healthCheckPath": "/",
+                            "healthyThresholdCount": 5,
+                            "port": 5000,
+                            "protocol": "HTTP",
+                            "targetGroupAttributes": [
+                              {
+                                "key": "stickiness.enabled",
+                                "value": "false"
+                              }
+                            ],
+                            "targetType": "instance",
+                            "unhealthyThresholdCount": 2,
+                            "vpcId": "vpc-0124b7c33740834aa"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnTargetGroup",
+                          "version": "2.28.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationTargetGroup",
+                      "version": "2.28.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationListener",
+                  "version": "2.28.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationLoadBalancer",
+              "version": "2.28.1"
+            }
+          },
+          "ASG": {
+            "id": "ASG",
+            "path": "CopChatAppStack/ASG",
+            "children": {
+              "ASG": {
+                "id": "ASG",
+                "path": "CopChatAppStack/ASG/ASG",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AutoScaling::AutoScalingGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "maxSize": "1",
+                    "minSize": "1",
+                    "launchTemplate": {
+                      "launchTemplateId": {
+                        "Ref": "LaunchTemplateChatApp9B138A28"
+                      },
+                      "version": {
+                        "Fn::GetAtt": [
+                          "LaunchTemplateChatApp9B138A28",
+                          "LatestVersionNumber"
+                        ]
+                      }
+                    },
+                    "targetGroupArns": [
+                      {
+                        "Ref": "LBChatAppListenerChatAppdefaulttargetGroup45BC7F20"
+                      }
+                    ],
+                    "vpcZoneIdentifier": [
+                      "subnet-08b0d8212e9cf97db",
+                      "subnet-058b06646465341f3",
+                      "subnet-02cdd36471bae50d3",
+                      "subnet-0ae525f938b91330a",
+                      "subnet-0972fd484f81b30b2",
+                      "subnet-0d91f4b4c24626642"
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_autoscaling.CfnAutoScalingGroup",
+                  "version": "2.28.1"
+                }
+              },
+              "ScheduledActionPrescaleInTheMorning": {
+                "id": "ScheduledActionPrescaleInTheMorning",
+                "path": "CopChatAppStack/ASG/ScheduledActionPrescaleInTheMorning",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "CopChatAppStack/ASG/ScheduledActionPrescaleInTheMorning/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::AutoScaling::ScheduledAction",
+                      "aws:cdk:cloudformation:props": {
+                        "autoScalingGroupName": {
+                          "Ref": "ASG46ED3070"
+                        },
+                        "minSize": 2,
+                        "recurrence": "0 8 * * *"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_autoscaling.CfnScheduledAction",
+                      "version": "2.28.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_autoscaling.ScheduledAction",
+                  "version": "2.28.1"
+                }
+              },
+              "ScheduledActionAllowDownscalingAtNight": {
+                "id": "ScheduledActionAllowDownscalingAtNight",
+                "path": "CopChatAppStack/ASG/ScheduledActionAllowDownscalingAtNight",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "CopChatAppStack/ASG/ScheduledActionAllowDownscalingAtNight/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::AutoScaling::ScheduledAction",
+                      "aws:cdk:cloudformation:props": {
+                        "autoScalingGroupName": {
+                          "Ref": "ASG46ED3070"
+                        },
+                        "minSize": 1,
+                        "recurrence": "0 20 * * *"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_autoscaling.CfnScheduledAction",
+                      "version": "2.28.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_autoscaling.ScheduledAction",
+                  "version": "2.28.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_autoscaling.AutoScalingGroup",
+              "version": "2.28.1"
+            }
+          },
+          "app dns": {
+            "id": "app dns",
+            "path": "CopChatAppStack/app dns",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.28.1"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "CopChatAppStack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "CopChatAppStack/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.28.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.1.42"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.28.1"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.28.1"
+    }
+  }
+}

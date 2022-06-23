@@ -1,0 +1,20 @@
+{
+  "version": "20.0.0",
+  "files": {
+    "4309698807b4a50797e6b96dcf8679d9e525f0dcb01b42d6503c94751fc4ded1": {
+      "source": {
+        "path": "CopChatAppStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "871027411396-us-east-1": {
+          "bucketName": "cdk-hnb659fds-assets-871027411396-us-east-1",
+          "objectKey": "4309698807b4a50797e6b96dcf8679d9e525f0dcb01b42d6503c94751fc4ded1.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::871027411396:role/cdk-hnb659fds-file-publishing-role-871027411396-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

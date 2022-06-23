@@ -1,0 +1,130 @@
+{
+  "version": "20.0.0",
+  "artifacts": {
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "CopChatAppStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "CopChatAppStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "CopChatAppStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://871027411396/us-east-1",
+      "properties": {
+        "templateFile": "CopChatAppStack.template.json",
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::871027411396:role/cdk-hnb659fds-deploy-role-871027411396-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::871027411396:role/cdk-hnb659fds-cfn-exec-role-871027411396-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-871027411396-us-east-1/4309698807b4a50797e6b96dcf8679d9e525f0dcb01b42d6503c94751fc4ded1.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "CopChatAppStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::871027411396:role/cdk-hnb659fds-lookup-role-871027411396-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "CopChatAppStack.assets"
+      ],
+      "metadata": {
+        "/CopChatAppStack/SecurityGroupEc2ChatApp/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SecurityGroupEc2ChatApp0A2C43BE"
+          }
+        ],
+        "/CopChatAppStack/SecurityGroupEc2ChatApp/from CopChatAppStackSecurityGroupALBChatAppACFFB872:5000": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SecurityGroupEc2ChatAppfromCopChatAppStackSecurityGroupALBChatAppACFFB872500097A34F75"
+          }
+        ],
+        "/CopChatAppStack/LaunchTemplateChatApp/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LaunchTemplateChatApp9B138A28"
+          }
+        ],
+        "/CopChatAppStack/SecurityGroupALBChatApp/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SecurityGroupALBChatAppF517B462"
+          }
+        ],
+        "/CopChatAppStack/LBChatApp/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LBChatApp4B8A2248"
+          }
+        ],
+        "/CopChatAppStack/LBChatApp/ListenerChatApp/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LBChatAppListenerChatAppF58ED9B9"
+          }
+        ],
+        "/CopChatAppStack/LBChatApp/ListenerChatApp/default-targetGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LBChatAppListenerChatAppdefaulttargetGroup45BC7F20"
+          }
+        ],
+        "/CopChatAppStack/ASG/ASG": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ASG46ED3070"
+          }
+        ],
+        "/CopChatAppStack/ASG/ScheduledActionPrescaleInTheMorning/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ASGScheduledActionPrescaleInTheMorning0AFAFA99"
+          }
+        ],
+        "/CopChatAppStack/ASG/ScheduledActionAllowDownscalingAtNight/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ASGScheduledActionAllowDownscalingAtNightE01BEEA7"
+          }
+        ],
+        "/CopChatAppStack/app dns": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "appdns"
+          }
+        ],
+        "/CopChatAppStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/CopChatAppStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/CopChatAppStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "CopChatAppStack"
+    }
+  }
+}

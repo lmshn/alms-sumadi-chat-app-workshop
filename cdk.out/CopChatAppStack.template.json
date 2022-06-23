@@ -1,0 +1,318 @@
+{
+ "Resources": {
+  "SecurityGroupEc2ChatApp0A2C43BE": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "security group for chat app ec2 instance",
+    "GroupName": "alms04ue1-sumadi-sg-chat-app-dev",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "VpcId": "vpc-0124b7c33740834aa"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CopChatAppStack/SecurityGroupEc2ChatApp/Resource"
+   }
+  },
+  "SecurityGroupEc2ChatAppfromCopChatAppStackSecurityGroupALBChatAppACFFB872500097A34F75": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "IpProtocol": "tcp",
+    "Description": "Load balancer to target",
+    "FromPort": 5000,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "SecurityGroupEc2ChatApp0A2C43BE",
+      "GroupId"
+     ]
+    },
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "SecurityGroupALBChatAppF517B462",
+      "GroupId"
+     ]
+    },
+    "ToPort": 5000
+   },
+   "Metadata": {
+    "aws:cdk:path": "CopChatAppStack/SecurityGroupEc2ChatApp/from CopChatAppStackSecurityGroupALBChatAppACFFB872:5000"
+   }
+  },
+  "LaunchTemplateChatApp9B138A28": {
+   "Type": "AWS::EC2::LaunchTemplate",
+   "Properties": {
+    "LaunchTemplateData": {
+     "ImageId": "ami-0d5fd506b85a1c987",
+     "InstanceType": "t3.micro",
+     "KeyName": "cop-chat-app",
+     "SecurityGroupIds": [
+      {
+       "Fn::GetAtt": [
+        "SecurityGroupEc2ChatApp0A2C43BE",
+        "GroupId"
+       ]
+      }
+     ],
+     "TagSpecifications": [
+      {
+       "ResourceType": "instance",
+       "Tags": [
+        {
+         "Key": "Name",
+         "Value": "CopChatAppStack/LaunchTemplateChatApp"
+        }
+       ]
+      },
+      {
+       "ResourceType": "volume",
+       "Tags": [
+        {
+         "Key": "Name",
+         "Value": "CopChatAppStack/LaunchTemplateChatApp"
+        }
+       ]
+      }
+     ],
+     "UserData": {
+      "Fn::Base64": "#!/bin/bash"
+     }
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CopChatAppStack/LaunchTemplateChatApp/Resource"
+   }
+  },
+  "SecurityGroupALBChatAppF517B462": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "security group for chat app elb",
+    "GroupName": "alms04ue1-sumadi-sg-elb-chat-app-dev",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "SecurityGroupIngress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "connection for application port",
+      "FromPort": 5000,
+      "IpProtocol": "tcp",
+      "ToPort": 5000
+     },
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow from anyone on port 80",
+      "FromPort": 80,
+      "IpProtocol": "tcp",
+      "ToPort": 80
+     }
+    ],
+    "VpcId": "vpc-0124b7c33740834aa"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CopChatAppStack/SecurityGroupALBChatApp/Resource"
+   }
+  },
+  "LBChatApp4B8A2248": {
+   "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+   "Properties": {
+    "LoadBalancerAttributes": [
+     {
+      "Key": "deletion_protection.enabled",
+      "Value": "false"
+     }
+    ],
+    "Scheme": "internet-facing",
+    "SecurityGroups": [
+     {
+      "Fn::GetAtt": [
+       "SecurityGroupALBChatAppF517B462",
+       "GroupId"
+      ]
+     }
+    ],
+    "Subnets": [
+     "subnet-08b0d8212e9cf97db",
+     "subnet-058b06646465341f3",
+     "subnet-02cdd36471bae50d3",
+     "subnet-0ae525f938b91330a",
+     "subnet-0972fd484f81b30b2",
+     "subnet-0d91f4b4c24626642"
+    ],
+    "Type": "application"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CopChatAppStack/LBChatApp/Resource"
+   }
+  },
+  "LBChatAppListenerChatAppF58ED9B9": {
+   "Type": "AWS::ElasticLoadBalancingV2::Listener",
+   "Properties": {
+    "DefaultActions": [
+     {
+      "TargetGroupArn": {
+       "Ref": "LBChatAppListenerChatAppdefaulttargetGroup45BC7F20"
+      },
+      "Type": "forward"
+     }
+    ],
+    "LoadBalancerArn": {
+     "Ref": "LBChatApp4B8A2248"
+    },
+    "Port": 80,
+    "Protocol": "HTTP"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CopChatAppStack/LBChatApp/ListenerChatApp/Resource"
+   }
+  },
+  "LBChatAppListenerChatAppdefaulttargetGroup45BC7F20": {
+   "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+   "Properties": {
+    "HealthCheckIntervalSeconds": 30,
+    "HealthCheckPath": "/",
+    "HealthyThresholdCount": 5,
+    "Port": 5000,
+    "Protocol": "HTTP",
+    "TargetGroupAttributes": [
+     {
+      "Key": "stickiness.enabled",
+      "Value": "false"
+     }
+    ],
+    "TargetType": "instance",
+    "UnhealthyThresholdCount": 2,
+    "VpcId": "vpc-0124b7c33740834aa"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CopChatAppStack/LBChatApp/ListenerChatApp/default-targetGroup/Resource"
+   }
+  },
+  "ASG46ED3070": {
+   "Type": "AWS::AutoScaling::AutoScalingGroup",
+   "Properties": {
+    "MaxSize": "1",
+    "MinSize": "1",
+    "LaunchTemplate": {
+     "LaunchTemplateId": {
+      "Ref": "LaunchTemplateChatApp9B138A28"
+     },
+     "Version": {
+      "Fn::GetAtt": [
+       "LaunchTemplateChatApp9B138A28",
+       "LatestVersionNumber"
+      ]
+     }
+    },
+    "TargetGroupARNs": [
+     {
+      "Ref": "LBChatAppListenerChatAppdefaulttargetGroup45BC7F20"
+     }
+    ],
+    "VPCZoneIdentifier": [
+     "subnet-08b0d8212e9cf97db",
+     "subnet-058b06646465341f3",
+     "subnet-02cdd36471bae50d3",
+     "subnet-0ae525f938b91330a",
+     "subnet-0972fd484f81b30b2",
+     "subnet-0d91f4b4c24626642"
+    ]
+   },
+   "UpdatePolicy": {
+    "AutoScalingScheduledAction": {
+     "IgnoreUnmodifiedGroupSizeProperties": true
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CopChatAppStack/ASG/ASG"
+   }
+  },
+  "ASGScheduledActionPrescaleInTheMorning0AFAFA99": {
+   "Type": "AWS::AutoScaling::ScheduledAction",
+   "Properties": {
+    "AutoScalingGroupName": {
+     "Ref": "ASG46ED3070"
+    },
+    "MinSize": 2,
+    "Recurrence": "0 8 * * *"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CopChatAppStack/ASG/ScheduledActionPrescaleInTheMorning/Resource"
+   }
+  },
+  "ASGScheduledActionAllowDownscalingAtNightE01BEEA7": {
+   "Type": "AWS::AutoScaling::ScheduledAction",
+   "Properties": {
+    "AutoScalingGroupName": {
+     "Ref": "ASG46ED3070"
+    },
+    "MinSize": 1,
+    "Recurrence": "0 20 * * *"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CopChatAppStack/ASG/ScheduledActionAllowDownscalingAtNight/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/32QQUsDMRCFf0vv2WhXEK/VgwgFodu7TCfjdto0CcmkIiX/3ezWli2Cp8x732NemFa3T3o+g6/UoNk3ljf61AngXq0o+RyRVGUfJ8K2AsIcWb5fo89BvXy6/40310dKSS0hO9yu6RAsCA2xW6cospCE0XowG7DgkF1/rIWLECwjCHu3rOx5ZBTHFVM9zXEScr+Zyzzha4g9yfXDE1kUZPEJwdb22l1FdxbX9B+vwy2ZbMkscFg+nuDWKmUw37OELMN0OWtRzhvSu3R3nD/qB30/2yXmJmYnfCC9Or8/f0oerZ8BAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "CopChatAppStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "appdns": {
+   "Description": "loadbalancer dns",
+   "Value": {
+    "Fn::GetAtt": [
+     "LBChatApp4B8A2248",
+     "DNSName"
+    ]
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
